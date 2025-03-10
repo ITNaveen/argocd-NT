@@ -83,9 +83,10 @@ Developers merge develop into main in the app repo after production deployment f
 # app vs project - 
 In ArgoCD, each microservice (e.g., auth-service, payment-service, order-service) is treated as an Application. The overall system or product (e.g., E-commerce Platform) is structured as a Project that groups these applications together.
 Example Structure in ArgoCD:
-
+```yaml
     Project: Ecommerce-Project
         Application: auth-service (manages authentication)
         Application: payment-service (handles transactions)
         Application: order-service (manages orders)
         Application: frontend (user interface)
+```

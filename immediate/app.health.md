@@ -23,7 +23,8 @@ create this app and then sync.
     we will use config map as group.
   - we need to edit cm in argocd-cm - 
     kubectl edit cm argocd-cm -n argocd
-.................................................................
+
+```yaml
 apiVersion: v1
 kind: ConfigMap
 data:
@@ -47,7 +48,7 @@ metadata:
   namespace: argocd
   resourceVersion: "454709"
   uid: e99ba6ad-a05d-4bf9-bc40-225138889e0e
-  ..............................................................
+  ```
 
   - now in argocd health status will show degraded.
   - this way we can set health checks.

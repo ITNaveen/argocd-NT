@@ -29,11 +29,13 @@
 
 # crating app using CLI - 
 - argocd app create
+```yaml
 argocd app create solar-system-app-CLI \
   --repo https://github.com/ITNaveen/gitops-argocd-kk.git \
   --path solar-system \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace solar-system
+```
 CREATED.
 
 - app is created but its not sync, so lets sync this - 

@@ -5,9 +5,11 @@ this is the way on how it sync from git to target state in cluster, when it disc
 # auto-pruning of resources - 
 Auto-pruning in ArgoCD ensures that deleted resources from your Git repository are automatically removed from the cluster during synchronization.
 this is how it needs to be defined - 
+```yaml
 syncPolicy:
     automated:
       prune: true  
+```
 - to enable this from CLI - 
   argocd app sync my-app --prune
 
@@ -17,7 +19,9 @@ syncPolicy:
 
 # self healing - 
 Self-healing in ArgoCD ensures that any manual changes made to resources in the cluster are automatically reverted to match the Git state.
+```yaml
 syncPolicy:
     automated:
       selfHeal: true 
+```
 
