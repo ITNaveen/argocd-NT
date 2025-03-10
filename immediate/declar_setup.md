@@ -1,7 +1,7 @@
 so we have a root dir - declarative dir - manifests - geocentric-model (our app)
 we can define this is kubernetes as - 
-# --- YAML START ---
-# yaml-language-server: $schema=https://json.schemastore.org/kubernetes
+
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -21,4 +21,4 @@ spec:
       - CreateNamespace=true
     automated:
       selfHeal: true
-# --- YAML END ---
+```
