@@ -9,12 +9,11 @@
    argocd cluster list (we have only 1 atm, this is the same where my argocd is deployed).
 
 4. first we need to define this second cluster in config file.
-   - kubectl config get-context (list all available clusters in your kubeconfig).
-   - kubectl cluster-info (detailed cluster info).
+   - kubectl config get-contexts (list all available clusters in your kubeconfig).
+   - kubectl cluster-info (detailed cluster info). - This command will provide details about the current cluster you're connected to (the one specified by the current context in your kubectl config).
 
 5. once the context is define then i do - 
-   argocd cluster add new_cluster_context
-   argocd cluster add admin@devspace (with this argocd is ready to deploy in second cluster dev-space as well).
+   argocd cluster add <dev-space-context> (with this argocd is ready to deploy in second cluster dev-space as well).
    this will create service account, clusterole, cluster-rolebinding as well.
 
 6. now check clusters list - argocd cluster list (it will show both clusters).

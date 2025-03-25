@@ -1,8 +1,42 @@
 - so when argocd polls git commit and deploy in cluster, it will check if deployment is fine or not, if number of replicas are created or not.
 1. healthy - if all the resources are 100% healthy.
-2. degraded - if resources indicates unheathly and or not able to reach healthy status on timely manner.
+
+2. degraded - if resources indicates unheathly.
+Possible Reasons:
+✅ A pod is stuck in CrashLoopBackOff or ImagePullBackOff.
+✅ A Deployment can’t create enough replicas.
+✅ A Service or Ingress has misconfigurations.
+✅ A resource failed to initialize within the expected time.
+How to Fix:
+    Run kubectl describe pod <pod-name> and check logs for errors.
+    Ensure container images exist and are accessible.
+    Check Deployment/StatefulSet logs for issues.
+
 3. missing - if resource is not present in the cluster.
+What it means:
+    The application was previously deployed, but now some or all of its resources are no longer found in the cluster.
+    ArgoCD expected those resources to be there but can’t find them anymore.
+Possible Reasons:
+✅ Someone manually deleted resources (e.g., kubectl delete was used).
+✅ Namespace got deleted, and all resources inside it disappeared.
+✅ Misconfiguration in ArgoCD, pointing to the wrong cluster or namespace.
+✅ External tools (Terraform, another GitOps tool, etc.) removed or modified the resources.
+How to Fix:
+    Check if the missing resources were deleted accidentally.
+    Run kubectl get all -n <namespace> to see if they exist.
+    Sync the application in ArgoCD to recreate the missing resources.
+  
 4. suspended - if resource is suspended or paused, typical example of paused deployment.
+What it means:
+    The application is paused and will not be updated or synced automatically.
+Why Would This Happen?
+✅ Someone manually suspended the application (e.g., for debugging).
+✅ ArgoCD’s sync policy might be configured to suspend it during maintenance.
+✅ External automation (Terraform, Helm) paused it.
+How to Fix:
+    If you want ArgoCD to resume deployments, go to the ArgoCD UI and unsuspend it.
+    Run argocd app resume <app-name> via CLI.
+    
 5. unknown - health status is failed and health status is unknown.
 
 - argocd also checks health check writtern in lua and these are defined in argocd-cm Configmap.

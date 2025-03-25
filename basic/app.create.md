@@ -1,12 +1,8 @@
 # creating app using UI - 
-
-- application - new_app - manual_sync 
-- now we need to connect repo - setting - repo - connect using https - then git repo url
+- we need to connect repo - setting - repo - connect -  using https - then git repo url
   we need git username and PAT.
 - now if i do - kubectl get secrets -n argocd, then i see repo secret and thats based on our new repo.
-- lets check whats in this scret - kubectl get secret repo-2421535171 -n argocd -o json
-  to see if thats the same repo - 
-  kubectl get secret repo-2421535171 -n argocd -o json | jq .data.url -r | base64 -d (my repo will be visible)
+- kubectl get secrets -n argocd | grep argocd-repo
 
 # now create an app - 
 - solar-system-app-1 - manual sync - select repo - then add path like here "solar-system" , so ./solar-system

@@ -26,59 +26,13 @@ But in Kubernetes, only 2 pods are running due to an issue.
 ArgoCD detects a mismatch (Sync Status = Out of Sync).
 You trigger a Sync to apply the missing pod and bring the live state back to the target state.
 
+# further explanation - 
+1. Out of Sync: This happens when there’s a mismatch between the desired state (from the Git repository) and the actual state in the Kubernetes cluster. If you're using manual sync, you will see the application as Out of Sync when changes occur that don't match the Git repository (like having 2 replicas running instead of 3). You'd then have to manually trigger a sync to bring the state back in sync.
+
+2. Automatic Sync: If you have auto-sync enabled in ArgoCD, ArgoCD will automatically apply the changes in the Git repository to the cluster. So, if there is a discrepancy, ArgoCD will automatically fix it by adjusting the number of replicas (or making other necessary changes). In this case, you won't see "Out of Sync" because ArgoCD will immediately reconcile the desired and actual states, bringing everything back to alignment without manual intervention.
+
 Application = Your deployment files (YAML manifests or Helm charts) in Git.
 Application Source Type = The method used to package/deploy (Helm, Kustomize, or raw Kubernetes YAML).
-
-# flow - - - - - - - - - -- - - 
-Real-World CI/CD Workflow (From Feature Development to Production)
-Feature Development:
-
-Developers create a feature branch from the develop branch in the app repository.
-Example: feature/xyz
-Jenkins is not triggered yet, because it only responds to changes in the develop branch in the app repository.
-Work on the Feature:
-
-Developers work on the feature in their feature branch. Once they’re done, they test their changes locally or in a separate test environment.
-Merge Feature Branch into develop (App Repo):
-
-Once the feature is complete and tested, developers create a pull request (PR) to merge their feature branch into the develop branch of the app repository.
-After the PR is reviewed and merged, Jenkins is triggered automatically by the change in the develop branch in the app repo.
-Jenkins Job Triggers:
-
-Jenkins performs the following:
-Builds the Docker image for the application.
-Pushes the Docker image to the container registry.
-Updates the values.yaml file in the GitOps repository (typically the staging branch in the GitOps/Helm repo).
-ArgoCD Detects Changes in GitOps Repository (Staging Deployment):
-
-ArgoCD continuously monitors the GitOps repository, specifically the staging branch.
-When ArgoCD detects the updated values.yaml file (updated by Jenkins), it triggers an automatic deployment to the staging environment.
-Staging environment is updated, and now testers and developers can verify the new changes in staging.
-Testing in Staging:
-
-Once the staging deployment is live, the testers and developers can test the application in the staging environment.
-If everyone is satisfied with the staging deployment, they approve the changes for production.
-Merge staging to main in the GitOps Repo (Production Deployment):
-
-After approval, the changes in the GitOps repository's staging branch are merged into the main branch.
-This triggers ArgoCD to deploy the changes to the production environment.
-The production environment is now updated with the new features.
-Merge develop to main in the App Repo (for Version Control and Release Management):
-
-After the production deployment is live, developers merge develop into main in the app repository.
-Important: This does not trigger Jenkins because Jenkins is only triggered by changes in develop.
-Merging develop into main in the app repo marks the feature as production-ready and serves as a way to track the version of code that has been deployed.
-Summary of Key Steps:
-App Repo (develop branch) triggers Jenkins:
-
-Jenkins builds the app, pushes the Docker image, and updates the Helm values in the GitOps repo (staging).
-ArgoCD detects the change in the GitOps repo and deploys to staging.
-Staging is tested and approved:
-
-Once staging is approved, the staging branch is merged into the main branch of the GitOps repo, triggering ArgoCD to deploy to production.
-App Repo main is updated for version control:
-
-Developers merge develop into main in the app repo after production deployment for version tracking. This does not trigger Jenkins.
 
 # app vs project - 
 In ArgoCD, each microservice (e.g., auth-service, payment-service, order-service) is treated as an Application. The overall system or product (e.g., E-commerce Platform) is structured as a Project that groups these applications together.
@@ -89,4 +43,10 @@ Example Structure in ArgoCD:
         Application: payment-service (handles transactions)
         Application: order-service (manages orders)
         Application: frontend (user interface)
+
+To Summarize:
+    webservice_tik = ArgoCD Project (this is the overall app that groups everything)
+    frontend-app = ArgoCD Application (for the frontend, which may contain 10 microservices)
+    backend-app = ArgoCD Application (for the backend, which may contain multiple microservices)
+    db-app = ArgoCD Application (for the database)
 ```
