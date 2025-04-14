@@ -7,6 +7,7 @@ Example: If they match, everything is fine. If they don’t, something is outdat
 Sync → The process of making the live state match the target state.
 Example: Applying updates from Git to Kubernetes.
 
+
 Sync Operation Status → Whether the sync was successful or not.
 Example: If a deployment fails due to an error, the sync status will show failure.
 
